@@ -1,0 +1,6 @@
+selenium==4.6.1
+getmac==0.8.3
+pure-python-adb==0.3.0.dev0
+pyperclip==1.8.2
+webdriver_manager==3.8.5
+bs4==0.0.1
