@@ -51,22 +51,22 @@ def page_down(num):
 
     
 def getStoreList():
-    store_list1 = driver.find_elements(By.CLASS_NAME,'qbGlu > div.ouxiq > a.P7gyV > div.ApCpt > div.C6RjW > span.YwYLL') #플레이스
-    store_list2 = driver.find_elements(By.CLASS_NAME,'UEzoS > div.CHC5F > a.tzwk0 > div.bSoi3 > div.N_KDL > span.TYaxT') #레스토랑
-    store_list3 = driver.find_elements(By.CLASS_NAME,'p0FrU > div.QTjRp > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah') #미용실
-    store_list4 = driver.find_elements(By.CLASS_NAME,'DWs4Q > div.IPtqD > a.gqFka > div.LYTmB > div.yxaf3 > span.q2LdB') #병원
-    ad_store1 = driver.find_elements(By.CLASS_NAME, 'qbGlu > a.gU6bV + div.ouxiq > a.P7gyV > div.ApCpt > div.C6RjW > span.YwYLL')
-    ad_store2 = driver.find_elements(By.CLASS_NAME, 'UEzoS > a.gU6bV + div.CHC5F > a.tzwk0 > div.bSoi3 > div.N_KDL > span.TYaxT')
-    ad_store3 = driver.find_elements(By.CLASS_NAME, 'p0FrU > a.gU6bV + div.QTjRp > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah')
-    ad_store4 = driver.find_elements(By.CLASS_NAME, 'DWs4Q > a.gU6bV + div.IPtqD > a.gqFka > div.LYTmB > div.yxaf3 > span.q2LdB')
+    store_list1 = driver.find_elements(By.CLASS_NAME,'qbGlu > div:first-child + div.ouxiq > a.P7gyV > div.ApCpt > div.C6RjW > span.YwYLL') #플레이스
+    store_list2 = driver.find_elements(By.CLASS_NAME,'UEzoS > div.CHC5F:first-child > a.tzwk0 > div.bSoi3 > div.N_KDL > span.TYaxT') #레스토랑
+    store_list3 = driver.find_elements(By.CLASS_NAME,'p0FrU > div.QTjRp:first-child > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah') #미용실
+    store_list4 = driver.find_elements(By.CLASS_NAME,'DWs4Q > div:first-child + div.IPtqD > a.gqFka > div.LYTmB > div.yxaf3 > span.q2LdB') #병원
+    store_list5 = driver.find_elements(By.CLASS_NAME,'p0FrU > div.QTjRp:first-child > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah') #네일샵
+
     if len(store_list1) > 0:
-        return store_list1, ad_store1
+        return store_list1
     elif len(store_list2) > 0:
-        return store_list2, ad_store2
+        return store_list2
     elif len(store_list3) > 0:
-        return store_list3, ad_store3
+        return store_list3
+    elif len(store_list4) > 0:
+        return store_list4
     else:
-        return store_list4, ad_store4
+        return store_list5
 
 datas = []
 driver = webdriver.Chrome('/chromedriver', options=option)  # 드라이버 경로
@@ -102,15 +102,13 @@ for place in placeList:
         result = ""
         next_btn[btn].click()
         sleep(2)
-        store_list, ad_store_list = getStoreList()
-        for ad_store in ad_store_list:
-            ad_stores.append(ad_store.text)
+        store_list = getStoreList()
 
         for store in store_list:
             stores.append(store.text)
-
-    for ad_store in ad_stores:
-        stores.remove(ad_store)
+    print("==================제거전====================")
+    print(stores)
+    print("===========================================")
 
     for i in range(len(stores)):
         if stores[i] == place.get('Name'):
