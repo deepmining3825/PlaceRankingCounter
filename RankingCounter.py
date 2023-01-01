@@ -1,4 +1,3 @@
-import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -7,7 +6,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from time import sleep
 from bs4 import BeautifulSoup
-import re
 import json
 
 # place리스트 to 튜플 리스트
@@ -19,10 +17,7 @@ if len(placeData) > 0:
         dict = placeData[idx]
         placeList.append(dict)
 
-
-# --크롬창을 숨기고 실행-- driver에 options를 추가해주면된다
 option = Options()
-#option.add_argument('headless')
 
 # css 찾을때 까지 10초대기
 def time_wait(num, code):
@@ -38,8 +33,6 @@ def time_wait(num, code):
 def switch_frame(frame):
     driver.switch_to.default_content()  # frame 초기화
     driver.switch_to.frame(frame)  # frame 변경
-    #res
-    #soup
 
 
 # 페이지 다운
@@ -95,7 +88,6 @@ for place in placeList:
 
     # 페이지 리스트
     next_btn = driver.find_elements(By.CLASS_NAME,'zRM9F > a')
-    ad_stores = []
     stores = []
     find = False
     for btn in range(len(next_btn))[1:]:
@@ -106,9 +98,6 @@ for place in placeList:
 
         for store in store_list:
             stores.append(store.text)
-    print("==================제거전====================")
-    print(stores)
-    print("===========================================")
 
     for i in range(len(stores)):
         if stores[i] == place.get('Name'):
