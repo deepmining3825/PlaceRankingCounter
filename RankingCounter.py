@@ -44,12 +44,12 @@ def page_down(num):
 
     
 def getStoreList():
-    store_list1 = driver.find_elements(By.CLASS_NAME,'qbGlu > div:first-child + div.ouxiq > a.P7gyV > div.ApCpt > div.C6RjW > span.YwYLL') #플레이스
-    store_list2 = driver.find_elements(By.CLASS_NAME,'UEzoS > div.CHC5F:first-child > a.tzwk0 > div.bSoi3 > div.N_KDL > span.TYaxT') #레스토랑
-    store_list3 = driver.find_elements(By.CLASS_NAME,'p0FrU > div.QTjRp:first-child > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah') #미용실
-    store_list4 = driver.find_elements(By.CLASS_NAME,'DWs4Q > div:first-child + div.IPtqD > a.gqFka > div.LYTmB > div.yxaf3 > span.q2LdB') #병원
-    store_list5 = driver.find_elements(By.CLASS_NAME,'p0FrU > div.QTjRp:first-child > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah') #네일샵
-
+    store_list1 = driver.find_elements(By.CLASS_NAME,'qbGlu > div:not(a ~ div) > a.P7gyV > div.ApCpt > div.C6RjW > span.YwYLL') #플레이스
+    store_list2 = driver.find_elements(By.CLASS_NAME,'UEzoS > div:not(a ~ div) > a.tzwk0 > div.bSoi3 > div.N_KDL > span.TYaxT') #레스토랑
+    store_list3 = driver.find_elements(By.CLASS_NAME,'p0FrU > div:not(a ~ div) > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah') #미용실
+    store_list4 = driver.find_elements(By.CLASS_NAME,'DWs4Q > div:not(a ~ div) > a.gqFka > div.LYTmB > div.yxaf3 > span.q2LdB') #병원
+    store_list5 = driver.find_elements(By.CLASS_NAME,'p0FrU > div:not(a ~ div) > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah') #네일샵
+    print(len(store_list2))
     if len(store_list1) > 0:
         return store_list1
     elif len(store_list2) > 0:
@@ -100,6 +100,7 @@ for place in placeList:
             stores.append(store.text)
 
     for i in range(len(stores)):
+        print(stores[i])
         if stores[i] == place.get('Name'):
             result = str(i+1) + "위"
             break
