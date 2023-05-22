@@ -7,9 +7,10 @@ from selenium.webdriver.chrome.options import Options
 from time import sleep
 from bs4 import BeautifulSoup
 import json
+import logging
 
 # place리스트 to 튜플 리스트
-with open ("Place.json", "r", encoding="UTF-8") as p:
+with open ("Keyword.json", "r", encoding="UTF-8") as p:
     placeData = json.load(p)
 if len(placeData) > 0:
     placeList = []
@@ -76,42 +77,45 @@ for place in placeList:
     search.send_keys(key_word)  # 검색어 입력
     search.send_keys(Keys.ENTER)  # 엔터버튼 누르기
 
-    res = driver.page_source  # 페이지 소스 가져오기
-    soup = BeautifulSoup(res, 'html.parser')  # html 파싱하여  가져온다
-
-    sleep(1)
-
-    # frame 변경
+    # res = driver.page_source  # 페이지 소스 가져오기
+    # soup = BeautifulSoup(res, 'html.parser')  # html 파싱하여  가져온다
     switch_frame('searchIframe')
-    page_down(40)
+    sleep(5)
+    el = driver.find_elements(By.CLASS_NAME,'DWs4Q > div:not(a ~ div) > a.gqFka > div.LYTmB > div.yxaf3 > span.q2LdB')
+    logging(el)
     sleep(5)
 
-    # 페이지 리스트
-    next_btn = driver.find_elements(By.CLASS_NAME,'zRM9F > a')
-    stores = []
-    find = False
-    for btn in range(len(next_btn))[1:]:
-        result = ""
-        next_btn[btn].click()
-        sleep(2)
-        store_list = getStoreList()
+    # # frame 변경
+    # switch_frame('searchIframe')
+    # page_down(40)
+    # sleep(5)
 
-        for store in store_list:
-            stores.append(store.text)
+    # # 페이지 리스트
+    # next_btn = driver.find_elements(By.CLASS_NAME,'zRM9F > a')
+    # stores = []
+    # find = False
+    # for btn in range(len(next_btn))[1:]:
+    #     result = ""
+    #     next_btn[btn].click()
+    #     sleep(2)
+    #     store_list = getStoreList()
 
-    for i in range(len(stores)):
-        if stores[i] == place.get('Name'):
-            result = str(i+1) + "위"
-            break
-        else:
-            result = "순위에 없음"
+    #     for store in store_list:
+    #         stores.append(store.text)
 
-    data = {'키워드': place.get('Keyword'), '업체명': place.get('Name'), '순위': result}
-    datas.append(data)
+    # for i in range(len(stores)):
+    #     if stores[i] == place.get('Name'):
+    #         result = str(i+1) + "위"
+    #         break
+    #     else:
+    #         result = "순위에 없음"
+
+    # data = {'키워드': place.get('Keyword'), '업체명': place.get('Name'), '순위': result}
+    # datas.append(data)
 
     
 driver.quit()  # 작업이 끝나면 창을닫는다.
-f = open("Ranking.txt",'w', encoding="UTF-8")
-for data in datas:
-    f.write(str(data)+"\n")
-f.close()
+# f = open("Ranking.txt",'w', encoding="UTF-8")
+# for data in datas:
+#     f.write(str(data)+"\n")
+# f.close()
