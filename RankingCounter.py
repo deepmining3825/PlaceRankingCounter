@@ -45,7 +45,7 @@ def page_down(num):
     
 def getStoreList():
     store_list1 = driver.find_elements(By.CLASS_NAME,'qbGlu > div:not(a ~ div) > a.P7gyV > div.ApCpt > div.C6RjW > span.YwYLL') #플레이스
-    store_list2 = driver.find_elements(By.CLASS_NAME,'UEzoS > div:not(a ~ div) > div.eY7cJ > a.tzwk0 > div.bSoi3 > div.N_KDL > span.TYaxT') #레스토랑
+    store_list2 = driver.find_elements(By.CLASS_NAME,'UEzoS > div:not(a ~ div) > a.tzwk0 > div.bSoi3 > div.N_KDL > span.TYaxT') #레스토랑
     store_list3 = driver.find_elements(By.CLASS_NAME,'p0FrU > div:not(a ~ div) > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah') #미용실
     store_list4 = driver.find_elements(By.CLASS_NAME,'DWs4Q > div:not(a ~ div) > a.gqFka > div.LYTmB > div.yxaf3 > span.q2LdB') #병원
     store_list5 = driver.find_elements(By.CLASS_NAME,'p0FrU > div:not(a ~ div) > a.JpTbw > div.G9H9r > div.tWIhh > span.O_Uah') #네일샵
