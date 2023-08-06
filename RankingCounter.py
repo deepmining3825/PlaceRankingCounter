@@ -4,9 +4,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 from bs4 import BeautifulSoup
 import json
+import selenium
 
 # place리스트 to 튜플 리스트
 with open ("Place.json", "r", encoding="UTF-8") as p:
@@ -25,7 +27,6 @@ def time_wait(num, code):
         wait = WebDriverWait(driver, num).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, code)))
     except:
-        print(code, '태그를 찾지 못하였습니다.')
         driver.quit()
     return wait
 
@@ -62,7 +63,8 @@ def getStoreList():
         return store_list5
 
 datas = []
-driver = webdriver.Chrome('/chromedriver', options=option)  # 드라이버 경로
+#driver = webdriver.Chrome('/chromedriver', options=option)  # 드라이버 경로
+driver = webdriver.Chrome(ChromeDriverManager(version="114.0.5735.90").install())
 for place in placeList:
     url = 'https://map.naver.com/v5/search'
     driver.get(url)

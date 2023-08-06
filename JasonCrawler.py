@@ -20,9 +20,9 @@ def getDriver():
     driver = webdriver.Chrome('/chromedriver', options=option)  # 드라이버 경로
     return driver
 
-# dmoaDB에 접속 후 발행매체, 키워드 쌍을 획득
+# jasonDB에 접속 후 발행매체, 키워드 쌍을 획득
 def getKeywordList(target):
-    conn = pymysql.connect(host='34.172.80.248', user='cmcm', password='cm1234', db='dmoadb', charset='utf8')
+    conn = pymysql.connect(host='34.172.204.75', user='cmcm', password='cm1234', db='jasondb', charset='utf8')
     cur = conn.cursor()
     cur.execute("SELECT DISTINCT publisher, " + target[0] + " FROM board ORDER BY publisher ASC")
     rawData = [item for item in cur.fetchall()]
@@ -30,9 +30,9 @@ def getKeywordList(target):
     conn.close()
     return keywordList
 
-# dmoaDB에 접속 후 데이터의 ID, URL을 획득
+# jasonDB에 접속 후 데이터의 ID, URL을 획득
 def getDataList(publisher, keyword, target):
-    conn = pymysql.connect(host='34.172.80.248', user='cmcm', password='cm1234', db='dmoadb', charset='utf8')
+    conn = pymysql.connect(host='34.172.204.75', user='cmcm', password='cm1234', db='jasondb', charset='utf8')
     cur = conn.cursor()
     cur.execute("SELECT id, url FROM board WHERE publisher = '" + publisher + "' and " + target[0] + " = '" + keyword + "'")
     rawData = [item for item in cur.fetchall()]
@@ -177,7 +177,7 @@ def viewTab(driver, keyword, target):
             update("순위 밖", item[0], target)
 
 def update(rank, id, target):
-    conn = pymysql.connect(host='34.172.80.248', user='cmcm', password='cm1234', db='dmoadb', charset='utf8')
+    conn = pymysql.connect(host='34.172.204.75', user='cmcm', password='cm1234', db='jasondb', charset='utf8')
     cur = conn.cursor()
     sql = "UPDATE board SET " + target[1] + " = %s WHERE id = %s"
     cur.execute(sql, (rank, id))

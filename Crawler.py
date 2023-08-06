@@ -4,23 +4,13 @@ from requests.adapters import HTTPAdapter
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 import re
 from selenium.webdriver.common.keys import Keys
 import time
 import requests
 import openpyxl
 import json
-import io
-import sys
-
-buffer = io.StringIO()
-sys.stdout = buffer
-sys.stderr = buffer
-
-# 스크롤 횟수 설정
-f = open("scroll.txt", "r")
-line = f.readline()
-f.close()
 
 # place리스트 to 튜플 리스트
 with open ("Keyword.json", "r", encoding="UTF-8") as p:
@@ -31,9 +21,15 @@ if len(placeData) > 0:
         dict = placeData[idx]
         placeList.append(dict)
 
+# 스크롤 횟수
+with open ("scroll.txt", "r", encoding="UTF-8") as p:
+    scroll = json.load(p)
+
+print("copyright (주)청명종합광고기획 개발팀")
 for place in placeList:
     #크롬 웹드라이버 불러오기
-    driver = webdriver.Chrome(ChromeDriverManager().install())
+    option = Options()
+    driver = webdriver.Chrome('/chromedriver', options=option)
     res = driver.get('https://m.place.naver.com/place/list?query=' + place.get('Keyword') + '&level=top')
     driver.implicitly_wait(20)
 
@@ -46,13 +42,14 @@ for place in placeList:
                     status_forcelist=[ 500, 502, 503, 504 ])
 
     session.mount('http://', HTTPAdapter(max_retries=retries))
+    session.mount('https://', HTTPAdapter(max_retries=retries))
 
     #body부분을 잡기 위해 쓸데없이 버튼을 클릭해줌
     driver.find_element(By.XPATH, '//*[@id="_list_scroll_container"]/div/div/div[1]/div/div/a[2]').click()
     driver.find_element(By.XPATH, '//*[@id="_list_scroll_container"]/div/div/div[1]/div/div/a[1]').click()
 
     #검색결과가 모두 보이지 않기 때문에 page down을 눌러 끝까지 펼쳐준다.
-    for scroll in range(0,int(line)):
+    for scroll in range(0,scroll):
         driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.PAGE_DOWN)
         time.sleep(0.2)
 
@@ -66,20 +63,24 @@ for place in placeList:
     # 현재 시트 선택
     sheet = wb.active
     # 헤더 추가하기
-    sheet.append(["업체명", "전화번호", "주소", "플레이스", "웹사이트1", "웹사이트2"])
+    sheet.append(["업체명", "새로오픈 여부", "전화번호", "주소", "플레이스", "웹사이트1", "웹사이트2"])
 
     #2차 크롤링을 위한 url
     url = 'https://m.place.naver.com'
     
     for info in naver_info:
+        open_yn = '#'
+        try:
+            open_yn = info.select_one('span.C6CLh').text
+        except:
+            pass
         store_name = info.select_one('span.YwYLL').text
         link = info.select_one('div.ouxiq').select_one('a').attrs['href']
         # link = info.select_one('qbGlu > div:not(a ~ div) > a.P7gyV').attrs['href']
         time.sleep(0.06)
 
         # #네이버 플레이스로 이동(place ID로 접속)
-        webAddress = url+link
-        N_res = session.get(webAddress, headers=headers)
+        N_res = session.get(link, headers=headers, verify=False)
         
         N_soup_srch = BeautifulSoup(N_res.content, 'html.parser')
         try:
@@ -99,8 +100,7 @@ for place in placeList:
             address = N_soup_srch.select('span.yxkiA > a')[3].attrs['data-line-description']
         except:
             address = '#'
-        sheet.append([store_name, tel, address, webAddress, website1, website2])
+        sheet.append([store_name, open_yn, tel, address, link, website1, website2])
         time.sleep(0.06)
+    print("copyright (주)청명종합광고기획 개발팀")
     wb.save(place.get('Keyword') + " 플레이스 크롤링 결과.xlsx")
-
-driver.quit()
